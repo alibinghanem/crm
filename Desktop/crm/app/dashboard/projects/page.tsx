@@ -138,7 +138,15 @@ export default function ProjectsPage() {
         .order('unit_code', { ascending: true })
 
       if (error) throw error
-      setProjectUnits(data || [])
+      
+      // تحويل البيانات لضمان التوافق مع الـ interface
+      const transformedData = (data || []).map((unit: any) => ({
+        ...unit,
+        unit_types: Array.isArray(unit.unit_types) ? unit.unit_types[0] || null : unit.unit_types,
+        projects: Array.isArray(unit.projects) ? unit.projects[0] || null : unit.projects
+      }))
+      
+      setProjectUnits(transformedData)
     } catch (error) {
       console.error('Error fetching project units:', error)
     }

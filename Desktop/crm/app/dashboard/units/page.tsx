@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Plus, Search, Home, MapPin, Bed, Bath, Square, DollarSign, Edit, Trash2, Eye, Filter, Calendar, User, Upload, X, Image as ImageIcon, Building, Phone, Sparkles, Map } from 'lucide-react'
 import Modal from '@/components/Modal'
 import Link from 'next/link'
+import { GridSkeleton, DetailsSkeleton } from '@/components/SkeletonLoader'
+import OptimizedImage from '@/components/OptimizedImage'
 
 type PriceMode = 'sale' | 'rent_monthly' | 'rent_yearly'
 
@@ -469,27 +471,54 @@ export default function UnitsPage() {
     }
   }
 
-  const filteredUnits = units.filter(unit => {
-    // إذا كان نص البحث فارغاً، نعرض كل شيء
-    const matchesSearch = searchTerm.trim() === '' ? true : (
-      unit.unit_code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      unit.unit_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      unit.unit_types?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      unit.projects?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      unit.location_desc?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      false // fallback إذا كانت جميع الحقول null
-    )
-    
-    const matchesProject = filterProject === 'all' || unit.project_id === filterProject
-    const matchesUnitType = filterUnitType === 'all' || unit.unit_type_id === filterUnitType
-    
-    return matchesSearch && matchesProject && matchesUnitType
-  })
+  // Memoize filtered units for better performance
+  const filteredUnits = useMemo(() => {
+    return units.filter(unit => {
+      // إذا كان نص البحث فارغاً، نعرض كل شيء
+      const matchesSearch = searchTerm.trim() === '' ? true : (
+        unit.unit_code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        unit.unit_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        unit.unit_types?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        unit.projects?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        unit.location_desc?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        false // fallback إذا كانت جميع الحقول null
+      )
+      
+      const matchesProject = filterProject === 'all' || unit.project_id === filterProject
+      const matchesUnitType = filterUnitType === 'all' || unit.unit_type_id === filterUnitType
+      
+      return matchesSearch && matchesProject && matchesUnitType
+    })
+  }, [units, searchTerm, filterProject, filterUnitType])
 
+  // Show skeleton loading
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      <div className="space-y-8 animate-fade-in">
+        {/* Header Skeleton */}
+        <div className="bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700 rounded-3xl shadow-2xl p-8 text-white animate-pulse">
+          <div className="h-8 bg-white/20 rounded w-1/3 mb-2"></div>
+          <div className="h-6 bg-white/10 rounded w-1/2"></div>
+        </div>
+
+        {/* Stats Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white rounded-2xl p-6 border-2 border-gray-200 animate-pulse">
+              <div className="flex items-center justify-between mb-4">
+                <div className="h-12 w-12 bg-gradient-to-br from-green-200 to-teal-200 rounded-xl"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+              </div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Units Grid Skeleton */}
+        <div className="bg-white rounded-2xl p-6 border-2 border-gray-200">
+          <div className="h-6 bg-gray-200 rounded w-1/4 mb-6 animate-pulse"></div>
+          <GridSkeleton count={9} />
+        </div>
       </div>
     )
   }
@@ -639,11 +668,14 @@ export default function UnitsPage() {
               {/* Image */}
               <div className={`h-56 bg-gradient-to-br from-green-100 via-emerald-100 to-teal-200 flex items-center justify-center relative overflow-hidden ${!unit.active ? 'opacity-60' : ''}`}>
                 {unit.primary_photo ? (
-                  <img
-                    src={getPublicUrl(unit.primary_photo)}
-                    alt={unit.unit_code || 'Unit'}
-                    className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
-                  />
+                  <div className="w-full h-full group-hover:scale-125 transition-transform duration-700">
+                    <OptimizedImage
+                      src={getPublicUrl(unit.primary_photo)}
+                      alt={unit.unit_code || 'Unit'}
+                      className="w-full h-56"
+                      fallback={<Home className="w-20 h-20 text-green-400" />}
+                    />
+                  </div>
                 ) : (
                   <Home className="w-20 h-20 text-green-400 group-hover:scale-110 transition-transform" />
                 )}
@@ -1194,10 +1226,10 @@ export default function UnitsPage() {
             <div className="relative">
               {selectedUnit.primary_photo ? (
                 <div className="relative h-64 rounded-2xl overflow-hidden shadow-2xl">
-                  <img 
+                  <OptimizedImage 
                     src={getPublicUrl(selectedUnit.primary_photo)} 
                     alt="Primary" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-64 rounded-2xl"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div className="absolute bottom-6 left-6 right-6">
@@ -1206,7 +1238,7 @@ export default function UnitsPage() {
                     </h2>
                     {selectedUnit.price && (
                       <p className="text-2xl font-bold text-green-400">
-                        {selectedUnit.price.toLocaleString()} ر.س
+                        {selectedUnit.price.toLocaleString()} ﷼
                         {selectedUnit.price_mode && <span className="text-base mr-2">({priceModeLabels[selectedUnit.price_mode]})</span>}
                       </p>
                     )}
@@ -1387,11 +1419,11 @@ export default function UnitsPage() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {selectedUnit.photos_paths.map((path, idx) => (
-                    <img
+                    <OptimizedImage
                       key={idx}
                       src={getPublicUrl(path)}
                       alt={`Gallery ${idx}`}
-                      className="w-full h-40 object-cover rounded-xl border-2 border-pink-200 shadow-lg hover:scale-105 transition-transform cursor-pointer"
+                      className="w-full h-40 rounded-xl border-2 border-pink-200 shadow-lg hover:scale-105 transition-transform cursor-pointer"
                     />
                   ))}
                 </div>

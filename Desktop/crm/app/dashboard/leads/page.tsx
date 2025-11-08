@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Plus, Search, Filter, Edit, Eye, Trash2, User, Phone, MapPin, DollarSign, Home, Building, Calendar, MessageCircle, ClipboardList, Sparkles, Bed, Bath, BarChart3, TrendingUp, PieChart as PieChartIcon, Target, Award } from 'lucide-react'
 import Modal from '@/components/Modal'
 import Link from 'next/link'
+import { GridSkeleton } from '@/components/SkeletonLoader'
 
 interface Lead {
   id: string
@@ -326,19 +327,46 @@ export default function LeadsPage() {
     }
   }
 
-  const filteredLeads = leads.filter(lead => {
-    const matchesSearch = 
-      lead.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.city?.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStage = selectedStage === 'all' || lead.stage === selectedStage
-    return matchesSearch && matchesStage
-  })
+  // Memoize filtered leads for better performance
+  const filteredLeads = useMemo(() => {
+    return leads.filter(lead => {
+      const matchesSearch = 
+        lead.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.city?.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesStage = selectedStage === 'all' || lead.stage === selectedStage
+      return matchesSearch && matchesStage
+    })
+  }, [leads, searchTerm, selectedStage])
 
+  // Show skeleton loading
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      <div className="space-y-6">
+        {/* Header Skeleton */}
+        <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-indigo-800 rounded-3xl shadow-2xl p-8 text-white animate-pulse">
+          <div className="h-10 bg-white/20 rounded w-1/3 mb-2"></div>
+          <div className="h-6 bg-white/10 rounded w-1/2"></div>
+        </div>
+
+        {/* Stats Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white rounded-2xl p-6 border-2 border-gray-200 animate-pulse">
+              <div className="flex items-center justify-between mb-4">
+                <div className="h-12 w-12 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-xl"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+              </div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Leads Grid Skeleton */}
+        <div className="bg-white rounded-2xl p-6 border-2 border-gray-200">
+          <div className="h-6 bg-gray-200 rounded w-1/4 mb-6 animate-pulse"></div>
+          <GridSkeleton count={8} />
+        </div>
       </div>
     )
   }

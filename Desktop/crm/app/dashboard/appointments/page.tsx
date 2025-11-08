@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Plus, Calendar, Clock, User, MapPin, Edit, Trash2, Eye, Search, Filter, Phone, Home } from 'lucide-react'
 import { format } from 'date-fns'
 import Modal from '@/components/Modal'
 import Link from 'next/link'
+import { TableSkeleton } from '@/components/SkeletonLoader'
 
 interface Appointment {
   id: string
@@ -289,19 +290,43 @@ export default function AppointmentsPage() {
     }
   }
 
-  const filteredAppointments = appointments.filter(apt => {
-    const matchesStatus = filterStatus === 'all' || apt.status === filterStatus
-    const matchesSearch = 
-      apt.leads?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      apt.leads?.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      apt.agent?.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesStatus && matchesSearch
-  })
+  // Memoize filtered appointments for better performance
+  const filteredAppointments = useMemo(() => {
+    return appointments.filter(apt => {
+      const matchesStatus = filterStatus === 'all' || apt.status === filterStatus
+      const matchesSearch = 
+        apt.leads?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        apt.leads?.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        apt.agent?.toLowerCase().includes(searchTerm.toLowerCase())
+      return matchesStatus && matchesSearch
+    })
+  }, [appointments, filterStatus, searchTerm])
 
+  // Show skeleton loading
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      <div className="space-y-8 animate-fade-in">
+        {/* Header Skeleton */}
+        <div className="bg-gradient-to-br from-orange-500 via-amber-600 to-yellow-700 rounded-3xl shadow-2xl p-8 text-white animate-pulse">
+          <div className="h-8 bg-white/20 rounded w-1/3 mb-2"></div>
+          <div className="h-6 bg-white/10 rounded w-1/2"></div>
+        </div>
+
+        {/* Stats Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white rounded-2xl p-6 border-2 border-gray-200 animate-pulse">
+              <div className="flex items-center justify-between mb-4">
+                <div className="h-12 w-12 bg-gradient-to-br from-orange-200 to-yellow-200 rounded-xl"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+              </div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Table Skeleton */}
+        <TableSkeleton rows={10} />
       </div>
     )
   }

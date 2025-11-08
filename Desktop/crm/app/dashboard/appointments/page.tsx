@@ -177,7 +177,7 @@ export default function AppointmentsPage() {
       if (error) throw error
       
       // تحويل البيانات لضمان التوافق مع الـ interface
-      const transformedData = (data || []).map(unit => ({
+      const transformedData = (data || []).map((unit: any) => ({
         ...unit,
         projects: Array.isArray(unit.projects) ? unit.projects[0] || null : unit.projects,
         unit_types: Array.isArray(unit.unit_types) ? unit.unit_types[0] || null : unit.unit_types

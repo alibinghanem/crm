@@ -261,7 +261,7 @@ export default function CustomerRequestsPage() {
   }, [requests])
 
   const cities = useMemo(() => {
-    return [...new Set(requests.map(r => r.city).filter(Boolean))]
+    return [...new Set(requests.map(r => r.city).filter((city): city is string => Boolean(city)))]
   }, [requests])
 
   function openCreateModal() {

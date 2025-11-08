@@ -175,7 +175,15 @@ export default function AppointmentsPage() {
         .order('unit_code')
 
       if (error) throw error
-      setUnits(data || [])
+      
+      // تحويل البيانات لضمان التوافق مع الـ interface
+      const transformedData = (data || []).map(unit => ({
+        ...unit,
+        projects: Array.isArray(unit.projects) ? unit.projects[0] || null : unit.projects,
+        unit_types: Array.isArray(unit.unit_types) ? unit.unit_types[0] || null : unit.unit_types
+      }))
+      
+      setUnits(transformedData)
     } catch (error) {
       console.error('Error fetching units:', error)
     }

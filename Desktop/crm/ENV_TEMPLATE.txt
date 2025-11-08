@@ -1,0 +1,32 @@
+# ===========================================
+# ملف البيئة - CRM System
+# ===========================================
+# 
+# تعليمات:
+# 1. انسخ محتوى هذا الملف
+# 2. أنشئ ملف جديد: .env.local
+# 3. الصق المحتوى وملأ القيم الفعلية
+# 4. لا ترفع ملف .env.local على Git!
+#
+
+# ============================================
+# Supabase Configuration
+# ============================================
+# احصل على هذه القيم من: https://supabase.com/dashboard
+# اختر مشروعك > Settings > API
+
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# ============================================
+# App Configuration
+# ============================================
+# عنوان URL للتطبيق (استبدل بـ IP السيرفر أو النطاق)
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# بيئة التشغيل (production للسيرفر، development للتطوير)
+NODE_ENV=production
+
+# المنفذ (Port) - اتركه 3000 أو غيّره حسب الحاجة
+PORT=3000
+

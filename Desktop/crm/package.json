@@ -1,0 +1,46 @@
+{
+  "name": "crm-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop crm-app",
+    "pm2:restart": "pm2 restart crm-app",
+    "pm2:reload": "pm2 reload crm-app",
+    "pm2:logs": "pm2 logs crm-app",
+    "pm2:status": "pm2 status",
+    "pm2:monit": "pm2 monit",
+    "deploy": "npm install && npm run build && npm run pm2:restart",
+    "deploy:fresh": "npm install && npm run build && npm run pm2:start",
+    "webhook:start": "pm2 start ecosystem.webhook.config.js",
+    "webhook:stop": "pm2 stop crm-webhook",
+    "webhook:logs": "pm2 logs crm-webhook",
+    "update:auto": "git pull && npm install && npm run build && pm2 reload crm-app"
+  },
+  "dependencies": {
+    "next": "14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/auth-helpers-nextjs": "^0.8.7",
+    "lucide-react": "^0.303.0",
+    "recharts": "^2.10.3",
+    "date-fns": "^3.0.0",
+    "clsx": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5",
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4"
+  }
+}

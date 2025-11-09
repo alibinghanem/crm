@@ -454,7 +454,7 @@ export default function ProjectsPage() {
         <div className="relative z-10 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <div className="p-3 bg-white/20 rounded-2xl">
                 <Building className="w-8 h-8" />
               </div>
               <div>
@@ -465,7 +465,7 @@ export default function ProjectsPage() {
           </div>
           <button
             onClick={handleCreate}
-            className="flex items-center gap-2 bg-white text-purple-700 px-6 py-3 rounded-xl hover:bg-purple-50 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105 font-bold"
+            className="flex items-center gap-2 bg-white text-purple-700 px-6 py-3 rounded-xl hover:bg-purple-50 transition-all shadow-xl hover:shadow-2xl font-bold"
           >
             <Plus className="w-5 h-5" />
             <span>إضافة مشروع جديد</span>
@@ -543,7 +543,7 @@ export default function ProjectsPage() {
             >
               {/* Header */}
               <div className={`h-40 bg-gradient-to-br from-purple-100 via-indigo-100 to-blue-200 flex items-center justify-center relative ${!project.active ? 'opacity-60' : ''}`}>
-                <Building className="w-16 h-16 text-purple-600 group-hover:scale-110 transition-transform" />
+                <Building className="w-16 h-16 text-purple-600 transition-opacity group-hover:opacity-80" />
                 {!project.active && (
                   <span className="absolute top-3 right-3 bg-red-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg">
                     ❌ غير نشط

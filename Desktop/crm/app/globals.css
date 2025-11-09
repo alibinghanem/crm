@@ -16,6 +16,24 @@
   }
 }
 
+/* ========================================
+   تحسينات لإزالة الضبابية (Anti-blur fixes)
+   ======================================== */
+html {
+  /* Text rendering improvements */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Force hardware acceleration for crisp rendering */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  
+  /* Prevent subpixel rendering issues */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -24,6 +42,10 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  
+  /* Ensure crisp rendering */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 @layer utilities {

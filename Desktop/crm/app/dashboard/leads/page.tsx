@@ -396,7 +396,7 @@ export default function LeadsPage() {
           </div>
           <button
             onClick={handleCreate}
-            className="flex items-center gap-2 glass-strong text-primary-900 px-6 py-4 rounded-2xl hover:bg-white/30 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95 font-bold backdrop-blur-sm border border-white/30 relative overflow-hidden group"
+            className="flex items-center gap-2 glass-strong text-primary-900 px-6 py-4 rounded-2xl hover:bg-white/30 transition-all shadow-xl hover:shadow-2xl font-bold border border-white/30 relative overflow-hidden group"
           >
             <div className="absolute inset-0 shine-effect opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <Plus className="w-5 h-5 relative z-10" />

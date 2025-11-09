@@ -532,7 +532,7 @@ export default function UnitsPage() {
         <div className="relative z-10 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <div className="p-3 bg-white/20 rounded-2xl">
                 <Home className="w-8 h-8" />
               </div>
               <div>
@@ -543,7 +543,7 @@ export default function UnitsPage() {
           </div>
           <button
             onClick={handleCreate}
-            className="flex items-center gap-2 bg-white text-green-700 px-6 py-3 rounded-xl hover:bg-green-50 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105 font-bold backdrop-blur-sm"
+            className="flex items-center gap-2 bg-white text-green-700 px-6 py-3 rounded-xl hover:bg-green-50 transition-all shadow-xl hover:shadow-2xl font-bold"
           >
             <Plus className="w-5 h-5" />
             <span>إضافة وحدة جديدة</span>
@@ -668,7 +668,7 @@ export default function UnitsPage() {
               {/* Image */}
               <div className={`h-56 bg-gradient-to-br from-green-100 via-emerald-100 to-teal-200 flex items-center justify-center relative overflow-hidden ${!unit.active ? 'opacity-60' : ''}`}>
                 {unit.primary_photo ? (
-                  <div className="w-full h-full group-hover:scale-125 transition-transform duration-700">
+                  <div className="w-full h-full">
                     <OptimizedImage
                       src={getPublicUrl(unit.primary_photo)}
                       alt={unit.unit_code || 'Unit'}
@@ -677,7 +677,7 @@ export default function UnitsPage() {
                     />
                   </div>
                 ) : (
-                  <Home className="w-20 h-20 text-green-400 group-hover:scale-110 transition-transform" />
+                  <Home className="w-20 h-20 text-green-400 transition-opacity group-hover:opacity-80" />
                 )}
                 {!unit.active && (
                   <span className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg">

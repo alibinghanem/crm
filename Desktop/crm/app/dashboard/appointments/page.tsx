@@ -340,7 +340,7 @@ export default function AppointmentsPage() {
         <div className="relative z-10 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <div className="p-3 bg-white/20 rounded-2xl">
                 <Calendar className="w-8 h-8" />
               </div>
               <div>
@@ -351,7 +351,7 @@ export default function AppointmentsPage() {
           </div>
           <button
             onClick={handleCreate}
-            className="flex items-center gap-2 bg-white text-orange-700 px-6 py-3 rounded-xl hover:bg-orange-50 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105 font-bold backdrop-blur-sm"
+            className="flex items-center gap-2 bg-white text-orange-700 px-6 py-3 rounded-xl hover:bg-orange-50 transition-all shadow-xl hover:shadow-2xl font-bold"
           >
             <Plus className="w-5 h-5" />
             <span>إضافة موعد جديد</span>
